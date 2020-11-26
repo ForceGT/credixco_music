@@ -3,6 +3,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:credixco_music_match/model/Track.dart';
 import 'package:credixco_music_match/service/music_service.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 part 'music_state.dart';
@@ -12,6 +13,7 @@ class MusicCubit extends Cubit<MusicState> {
 
   MusicCubit({this.musicService}) : super(MusicInitialState()) {
     checkInternet();
+    getAllTracks();
   }
 
   void checkInternet() {
@@ -31,20 +33,26 @@ class MusicCubit extends Cubit<MusicState> {
   }
 
   void getAllTracks() {
+    emit(MusicLoadingState());
     musicService.getAllTracks().then((listOfTracks) {
+      debugPrint("List of Tracks getAllTracks(): $listOfTracks");
       emit(MusicSuccessState(single: false, trackList: listOfTracks));
     }).catchError((error) {
+      debugPrint("Error getAllTracks(): $error");
       emit(MusicErrorState(error: error.toString()));
     });
   }
 
 
   void getTrackDetails(String id){
+    emit(MusicLoadingState());
     musicService.getTrackDetail(id).then((track){
       List<Track> trackListSingleElement = List(1);
       trackListSingleElement.add(track);
+      debugPrint("List of Tracks getTrackDetails(): $trackListSingleElement");
       emit(MusicSuccessState(single: true, trackList: trackListSingleElement));
     }).catchError((error){
+      debugPrint("Error getTrackDetails(): $error");
       emit(MusicErrorState(error: error.toString()));
     });
   }
