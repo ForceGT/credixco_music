@@ -18,28 +18,30 @@ class Track {
   String trackEditUrl;
   int restricted;
   String updatedTime;
+  String lyrics;
+
   //PrimaryGenres primaryGenres;
 
   Track(
       {this.trackId,
-        this.trackName,
-        this.trackRating,
-        this.commonTrackId,
-        this.instrumental,
-        this.explicit,
-        this.hasLyrics,
-        this.hasSubtitles,
-        this.hasRichSync,
-        this.numFavourite,
-        this.albumId,
-        this.albumName,
-        this.artistId,
-        this.artistName,
-        this.trackShareUrl,
-        this.trackEditUrl,
-        this.restricted,
-        this.updatedTime,
-        });
+      this.trackName,
+      this.trackRating,
+      this.commonTrackId,
+      this.instrumental,
+      this.explicit,
+      this.hasLyrics,
+      this.hasSubtitles,
+      this.hasRichSync,
+      this.numFavourite,
+      this.albumId,
+      this.albumName,
+      this.artistId,
+      this.artistName,
+      this.trackShareUrl,
+      this.trackEditUrl,
+      this.restricted,
+      this.updatedTime,
+      this.lyrics});
 
   Track.fromJson(Map<String, dynamic> json) {
     trackId = json['track_id'];
@@ -60,6 +62,10 @@ class Track {
     trackEditUrl = json['track_edit_url'];
     restricted = json['restricted'];
     updatedTime = json['updated_time'];
+    (json['has_lyrics'] == 1 && json['lyrics'] != null)
+        ? lyrics = json['lyrics']
+        : lyrics = "Not found or available";
+
     // primaryGenres = json['primary_genres'] != null
     //     ? new PrimaryGenres.fromJson(json['primary_genres'])
     //     : null;
@@ -92,6 +98,8 @@ class Track {
     // if (this.primaryGenres != null) {
     //   data['primary_genres'] = this.primaryGenres.toJson();
     // }
+    data["lyrics"] = this.lyrics;
+
     return data;
   }
 }
