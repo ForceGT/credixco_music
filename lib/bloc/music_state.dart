@@ -3,6 +3,7 @@ part of 'music_cubit.dart';
 @immutable
 abstract class MusicState {}
 
+
 class MusicInitialState extends MusicState {}
 
 class MusicLoadingState extends MusicState{}
