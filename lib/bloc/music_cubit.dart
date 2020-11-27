@@ -13,7 +13,6 @@ class MusicCubit extends Cubit<MusicState> {
 
   MusicCubit({this.musicService}) : super(MusicInitialState()) {
     checkInternet();
-    getAllTracks();
   }
 
   void checkInternet() {
@@ -23,6 +22,7 @@ class MusicCubit extends Cubit<MusicState> {
         var isDeviceConnected = await DataConnectionChecker().hasConnection;
         if (isDeviceConnected) {
           emit(MusicLoadingState());
+          getAllTracks();
         } else {
           emit(MusicErrorState(error: "No Internet Connection"));
         }
@@ -36,6 +36,7 @@ class MusicCubit extends Cubit<MusicState> {
     emit(MusicLoadingState());
     musicService.getAllTracks().then((listOfTracks) {
       debugPrint("List of Tracks getAllTracks(): $listOfTracks");
+      debugPrint("Sample List Element ${listOfTracks[0].toString()}");
       emit(MusicSuccessState(single: false, trackList: listOfTracks));
     }).catchError((error) {
       debugPrint("Error getAllTracks(): $error");
@@ -47,7 +48,7 @@ class MusicCubit extends Cubit<MusicState> {
   void getTrackDetails(String id){
     emit(MusicLoadingState());
     musicService.getTrackDetail(id).then((track){
-      List<Track> trackListSingleElement = List(1);
+      List<Track> trackListSingleElement = [];
       trackListSingleElement.add(track);
       debugPrint("List of Tracks getTrackDetails(): $trackListSingleElement");
       emit(MusicSuccessState(single: true, trackList: trackListSingleElement));
