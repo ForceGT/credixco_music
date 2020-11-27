@@ -1,4 +1,5 @@
-import 'package:credixco_music_match/bloc/music_cubit.dart';
+import 'package:credixco_music_match/bloc/music/music_cubit.dart';
+import 'package:credixco_music_match/model/Track.dart';
 import 'package:credixco_music_match/screens/track_detail.dart';
 import 'package:credixco_music_match/widgets/music_item.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,13 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Trending"),
+      ),
       body: BlocBuilder<MusicCubit, MusicState>(
+        cubit: BlocProvider.of<MusicCubit>(context)..getAllTracks(),
         builder: (context, state) {
-          debugPrint("State :$state");
           if (state is MusicLoadingState) {
             return Center(
               child: CircularProgressIndicator(),
@@ -26,8 +31,8 @@ class _HomeState extends State<Home> {
               itemCount: state.trackList.length,
               itemBuilder: (context, index) {
                 return MusicItem(
-                  onTap: () async{
-                    await navigateToTrackDetail(context,trackList[index].trackId);
+                  onTap: () {
+                    navigateToTrackDetail(context,trackList[index]);
                   },
 
                   trackName: trackList[index].trackName,
@@ -45,7 +50,8 @@ class _HomeState extends State<Home> {
             return Center(
               child: Text("${state.error}"),
             );
-          } else {
+          }
+          else {
             return Container();
           }
         },
@@ -53,8 +59,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void navigateToTrackDetail(BuildContext context, int trackId) async{
-    context.read<MusicCubit>().getTrackDetails(trackId.toString());
-    Navigator.push(context, MaterialPageRoute(builder: (context) => TrackDetail()));
+
+  void navigateToTrackDetail(BuildContext context, Track track) async{
+    Navigator.push(context, MaterialPageRoute(builder: (context) => TrackDetail(id: track.trackId.toString(),)));
   }
 }
