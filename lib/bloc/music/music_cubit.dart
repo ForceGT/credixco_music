@@ -4,6 +4,7 @@ import 'package:credixco_music_match/model/Track.dart';
 import 'package:credixco_music_match/service/music_service.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
+
 import 'package:meta/meta.dart';
 
 part 'music_state.dart';
@@ -12,7 +13,7 @@ class MusicCubit extends Cubit<MusicState> {
   final MusicService musicService;
 
   MusicCubit({this.musicService}) : super(MusicInitialState()) {
-    checkInternet();
+     checkInternet();
   }
 
   void checkInternet() {
@@ -20,8 +21,8 @@ class MusicCubit extends Cubit<MusicState> {
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
         var isDeviceConnected = await DataConnectionChecker().hasConnection;
-        if (isDeviceConnected) {
-          emit(MusicLoadingState());
+        if (isDeviceConnected ) {
+          //emit(MusicLoadingState());
           getAllTracks();
         } else {
           emit(MusicErrorState(error: "No Internet Connection"));
@@ -35,8 +36,9 @@ class MusicCubit extends Cubit<MusicState> {
   void getAllTracks() {
     emit(MusicLoadingState());
     musicService.getAllTracks().then((listOfTracks) {
-      debugPrint("List of Tracks getAllTracks(): $listOfTracks");
-      debugPrint("Sample List Element ${listOfTracks[0].toString()}");
+      //debugPrint("List of Tracks getAllTracks(): $listOfTracks");
+      //debugPrint("Sample List Element ${listOfTracks[0].toString()}");
+
       emit(MusicSuccessState(single: false, trackList: listOfTracks));
     }).catchError((error) {
       debugPrint("Error getAllTracks(): $error");
@@ -50,11 +52,12 @@ class MusicCubit extends Cubit<MusicState> {
     musicService.getTrackDetail(id).then((track){
       List<Track> trackListSingleElement = [];
       trackListSingleElement.add(track);
-      debugPrint("List of Tracks getTrackDetails(): $trackListSingleElement");
+      //debugPrint("List of Tracks getTrackDetails(): $trackListSingleElement");
       emit(MusicSuccessState(single: true, trackList: trackListSingleElement));
     }).catchError((error){
       debugPrint("Error getTrackDetails(): $error");
       emit(MusicErrorState(error: error.toString()));
     });
   }
+
 }

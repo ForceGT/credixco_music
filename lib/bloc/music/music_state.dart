@@ -6,6 +6,7 @@ abstract class MusicState {}
 
 class MusicInitialState extends MusicState {}
 
+
 class MusicLoadingState extends MusicState{}
 
 class MusicSuccessState extends MusicState{
@@ -18,3 +19,4 @@ class MusicErrorState extends MusicState{
   final String error;
   MusicErrorState({this.error});
 }
+
